@@ -4,21 +4,30 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\VacancyController;
 
-Route::get('/',[PostController::class,'index']);
-Route::post('/store',[PostController::class,'store']);
-Route::get('/show/{id}',[PostController::class,'show']);
-Route::patch('/update/{id}',[PostController::class,'update']);
-Route::delete('/destroy/{id}',[PostController::class,'destroy']);
+// ============= ПОСТЫ =============
+Route::get('/posts', [PostController::class, 'index']);              // GET - все посты
+Route::post('/posts', [PostController::class, 'store']);             // POST - создать пост
+Route::get('/posts/{id}', [PostController::class, 'show']);          // GET - один пост
+Route::put('/posts/{id}', [PostController::class, 'update']);        // PUT - полное обновление
+Route::patch('/posts/{id}', [PostController::class, 'update']);      // PATCH - частичное обновление
+Route::delete('/posts/{id}', [PostController::class, 'destroy']);    // DELETE - удалить пост
 
+// ============= КОММЕНТАРИИ =============
+Route::get('/comments', [CommentController::class, 'index']);                 // GET - все комментарии
+Route::post('/comments', [CommentController::class, 'store']);                // POST - создать комментарий
+Route::get('/comments/{id}', [CommentController::class, 'show']);             // GET - один комментарий
+Route::put('/comments/{id}', [CommentController::class, 'update']);           // PUT - полное обновление
+Route::patch('/comments/{id}', [CommentController::class, 'update']);         // PATCH - частичное обновление
+Route::delete('/comments/{id}', [CommentController::class, 'destroy']);       // DELETE - удалить комментарий
 
-
-Route::get('/Comment',[CommentController::class,'index']);
-Route::post('/Comment/store',[CommentController::class,'store']);
-Route::get('/Comment/show/{id}',[CommentController::class,'show']);
-Route::patch('/Comment/update/{id}',[CommentController::class,'update']);
-Route::delete('/Comment/destroy/{id}',[CommentController::class,'destroy']);
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+// ============= ВАКАНСИИ =============
+Route::get('/vacancies', [VacancyController::class, 'index']);         // GET - все вакансии
+Route::get('/vacancies/create', [VacancyController::class, 'create']); // GET - форма создания
+Route::post('/vacancies', [VacancyController::class, 'store']);        // POST - создать вакансию
+Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show']);// GET - одна вакансия
+Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit']); // GET - форма редактирования
+Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);     // PUT - полное обновление
+Route::patch('/vacancies/{vacancy}', [VacancyController::class, 'update']);   // PATCH - частичное обновление
+Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']); // DELETE - удалить вакансию
