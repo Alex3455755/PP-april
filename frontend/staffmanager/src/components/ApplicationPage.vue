@@ -1,4 +1,6 @@
 <template>
+
+  <AppMenu />
   <div class="wrapper">
     <img :src="backgroundImage" alt="Background" class="bg-image">
 
@@ -97,6 +99,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 
+import AppMenu from './items/AppMenu.vue'
+
 const backgroundImage = ref('img/fon.png')
 
 const vacancies = ref([])
@@ -182,6 +186,9 @@ const getApplicationsCount = (vacancyId) => {
   height: 100vh;
   overflow: hidden;
   color: white;
+}
+.menu {
+  z-index: 9999;
 }
 
 .bg-image {

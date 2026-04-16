@@ -1,4 +1,6 @@
 <template>
+
+  <AppMenu />
   <div class="wrapper">
 
     <!-- Фон -->
@@ -161,6 +163,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import AppMenu from './items/AppMenu.vue'
 
 
 const createModal = ref(false)
@@ -608,6 +611,9 @@ const deleteVacancy = async (id) => {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
+}
+.menu {
+  z-index: 9999;
 }
 
 
