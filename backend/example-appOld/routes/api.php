@@ -1,33 +1,55 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\VacancyController;
-
-// ============= ПОСТЫ =============
-Route::get('/posts', [PostController::class, 'index']);              // GET - все посты
-Route::post('/posts', [PostController::class, 'store']);             // POST - создать пост
-Route::get('/posts/{id}', [PostController::class, 'show']);          // GET - один пост
-Route::put('/posts/{id}', [PostController::class, 'update']);        // PUT - полное обновление
-Route::patch('/posts/{id}', [PostController::class, 'update']);      // PATCH - частичное обновление
-Route::delete('/posts/{id}', [PostController::class, 'destroy']);    // DELETE - удалить пост
-
-// ============= КОММЕНТАРИИ =============
-Route::get('/comments', [CommentController::class, 'index']);                 // GET - все комментарии
-Route::post('/comments', [CommentController::class, 'store']);                // POST - создать комментарий
-Route::get('/comments/{id}', [CommentController::class, 'show']);             // GET - один комментарий
-Route::put('/comments/{id}', [CommentController::class, 'update']);           // PUT - полное обновление
-Route::patch('/comments/{id}', [CommentController::class, 'update']);         // PATCH - частичное обновление
-Route::delete('/comments/{id}', [CommentController::class, 'destroy']);       // DELETE - удалить комментарий
+use App\Http\Controllers\CollegeController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ApplicationController;
 
 // ============= ВАКАНСИИ =============
-Route::get('/vacancies', [VacancyController::class, 'index']);         // GET - все вакансии
-Route::get('/vacancies/create', [VacancyController::class, 'create']); // GET - форма создания
-Route::post('/vacancies', [VacancyController::class, 'store']);        // POST - создать вакансию
-Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show']);// GET - одна вакансия
-Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit']); // GET - форма редактирования
-Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);     // PUT - полное обновление
-Route::patch('/vacancies/{vacancy}', [VacancyController::class, 'update']);   // PATCH - частичное обновление
-Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']); // DELETE - удалить вакансию
+Route::get('/vacancies', [VacancyController::class, 'index']);
+Route::get('/vacancies/create', [VacancyController::class, 'create']);
+Route::post('/vacancies', [VacancyController::class, 'store']);
+Route::get('/vacancies/{vacancy}', [VacancyController::class, 'show']);
+Route::get('/vacancies/{vacancy}/edit', [VacancyController::class, 'edit']);
+Route::put('/vacancies/{vacancy}', [VacancyController::class, 'update']);
+Route::patch('/vacancies/{vacancy}', [VacancyController::class, 'update']);
+Route::delete('/vacancies/{vacancy}', [VacancyController::class, 'destroy']);
+
+// Маршруты для колледжей
+Route::get('/colleges', [CollegeController::class, 'index']);
+Route::get('/colleges/universities', [CollegeController::class, 'getUniversities']);
+Route::get('/colleges/colleges-only', [CollegeController::class, 'getCollegesOnly']);
+Route::get('/colleges/search', [CollegeController::class, 'search']);
+Route::get('/colleges/{college}', [CollegeController::class, 'show']);
+Route::post('/colleges', [CollegeController::class, 'store']);
+Route::put('/colleges/{college}', [CollegeController::class, 'update']);
+Route::patch('/colleges/{college}', [CollegeController::class, 'update']);
+Route::delete('/colleges/{college}', [CollegeController::class, 'destroy']);
+
+// Авторизация
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+
+// ============= APPLICATIONS =============
+Route::get('/applications', [ApplicationController::class, 'index']);
+Route::get('/applications/create', [ApplicationController::class, 'create']);
+Route::post('/applications', [ApplicationController::class, 'store']);
+Route::get('/applications/{application}', [ApplicationController::class, 'show']);
+Route::get('/applications/{application}/edit', [ApplicationController::class, 'edit']);
+Route::put('/applications/{application}', [ApplicationController::class, 'update']);
+Route::patch('/applications/{application}', [ApplicationController::class, 'update']);
+Route::delete('/applications/{application}', [ApplicationController::class, 'destroy']);
+
+
+
+
+// ============= REQUESTS / APPLICATIONS =============
+Route::get('/requests', [RequestController::class, 'index']);
+Route::post('/requests', [RequestController::class, 'store']);
+Route::get('/requests/{id}', [RequestController::class, 'show']);
+Route::put('/requests/{id}', [RequestController::class, 'update']);
+Route::patch('/requests/{id}', [RequestController::class, 'update']);
+Route::delete('/requests/{id}', [RequestController::class, 'destroy']);
