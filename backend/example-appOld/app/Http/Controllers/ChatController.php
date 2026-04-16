@@ -4,62 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // список чатов пользователя
     public function index()
     {
-        //
+        // $userId = Auth::id();
+        $userId = 6;
+
+        $chats = Chat::where('author_id', $userId)
+            ->orWhere('interlocutor_id', $userId)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return response()->json($chats);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // создать чат
     public function store(Request $request)
     {
-        //
+        $chat = Chat::create([
+            'token' => uniqid('chat_'),
+            'author_id' => $request->author_id,
+            'interlocutor_id' => $request->interlocutor_id,
+        ]);
+
+        return response()->json($chat);
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // показать чат
     public function show(Chat $chat)
     {
-        //
+        return response()->json($chat);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Chat $chat)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Chat $chat)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Chat $chat)
     {
-        //
+        $chat->delete();
+
+        return response()->json(['message' => 'Chat deleted']);
     }
 }

@@ -7,6 +7,8 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationActionController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MessageController;
 
 // ============= ВАКАНСИИ =============
 Route::get('/vacancies', [VacancyController::class, 'index']);
@@ -65,3 +67,14 @@ Route::get('/mail-test', function () {
 
     return 'sent';
 });
+
+Route::get('/chats', [ChatController::class, 'index']);
+Route::post('/chats', [ChatController::class, 'store']);
+Route::get('/chats/{chat}', [ChatController::class, 'show']);
+Route::delete('/chats/{chat}', [ChatController::class, 'destroy']);
+
+
+Route::get('/chats/{chatId}/messages', [MessageController::class, 'index']);
+Route::post('/messages', [MessageController::class, 'store']);
+Route::get('/messages/{message}', [MessageController::class, 'show']);
+Route::delete('/messages/{message}', [MessageController::class, 'destroy']);

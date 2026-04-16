@@ -6,6 +6,7 @@ import VacanciesPage from '@/components/VacanciesPage.vue'
 import LoginPage from '@/components/LoginPage.vue'
 import RegisterPage from '@/components/RegisterPage.vue'
 import ApplicationPage from '@/components/ApplicationPage.vue'
+import ChatPage from '@/components/ChatPage.vue'
 
 const routes = [
   {
@@ -32,6 +33,10 @@ const routes = [
     path: '/application',
     name: 'application',
     component: ApplicationPage
+  },{
+    path: '/chats',
+    name: 'chats',
+    component: ChatPage,
   }
 ]
 

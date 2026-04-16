@@ -113,7 +113,13 @@ const submitLogin = async () => {
       localStorage.setItem('is_authenticated', 'true')
 
       alert(`Добро пожаловать!`);
-      router.push('/vacancies');
+
+      console.log(result.data.user.role);
+      if(result.data.user.role === 1){
+        router.push('/admin');
+      }else{
+        router.push('/chats');
+      }
     } else {
       alert('Ошибка входа: ' + (result.message || 'Неверный email или пароль'))
     }

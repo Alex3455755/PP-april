@@ -12,6 +12,7 @@
     <nav class="nav">
       <router-link to="/admin" class="nav-item">Вакансии</router-link>
       <router-link to="/application" class="nav-item">Заявки</router-link>
+      <router-link to="/chats" class="nav-item">Чаты</router-link>
     </nav>
 
     <div class="right">

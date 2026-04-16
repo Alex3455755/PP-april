@@ -77,7 +77,7 @@ class AuthController extends Controller
 
     if (Auth::attempt($credentials, $remember)) {
         $user = Auth::user();   // ← Вот здесь получаем пользователя
-
+        
         return response()->json([
             'success' => true,
             'message' => 'Вход выполнен успешно',
@@ -86,6 +86,7 @@ class AuthController extends Controller
                     'id'    => $user->id,
                     'name'  => $user->name,
                     'email' => $user->email,
+                    'role' => $user->role,
                 ]
             ]
         ]);
