@@ -13,11 +13,7 @@ class vacancy extends Model
         'description',
         'salary',
         'experience',
-        'skills',
-        'university_name',
-        'university_rate',
-        'university_type',
-        'application_rating'
+        'skills'
     ];
     use HasFactory;
 }

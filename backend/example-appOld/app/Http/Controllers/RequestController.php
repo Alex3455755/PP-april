@@ -48,10 +48,14 @@ class RequestController extends Controller
 
         $college = College::findOrFail($validated['college_id']);
 
-        // 🔥 РЕЙТИНГ РАСЧЁТ
+        if($college->type === "ВУЗ"){
+            $collegeScore = (57 - ($college->rate)) * 2 ?? 0;
+        }else{
+            $collegeScore = (57 - $college->rate) ?? 0;
+        }
+        // РЕЙТИНГ РАСЧЁТ
         $ageScore = (100 - $validated['age']) * 2;   // молодость важна
-        $experienceScore = $validated['experience'] * 3; // опыт важнее
-        $collegeScore = $college->rate ?? 0;
+        $experienceScore = $validated['experience'] * 5; // опыт важнее
 
         $finalRate = $ageScore + $experienceScore + $collegeScore;
 

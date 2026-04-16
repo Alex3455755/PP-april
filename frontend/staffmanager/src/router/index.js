@@ -13,8 +13,8 @@ const routes = [
     name: 'Home',
     component: MainPage,
   },{
-    path: '/staff',
-    name: 'staff',
+    path: '/admin',
+    name: 'admin',
     component: AdminPage
   },{
     path: '/vacancies',
