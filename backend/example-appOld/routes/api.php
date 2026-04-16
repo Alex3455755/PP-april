@@ -6,6 +6,7 @@ use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationActionController;
 
 // ============= ВАКАНСИИ =============
 Route::get('/vacancies', [VacancyController::class, 'index']);
@@ -53,3 +54,14 @@ Route::get('/requests/{id}', [RequestController::class, 'show']);
 Route::put('/requests/{id}', [RequestController::class, 'update']);
 Route::patch('/requests/{id}', [RequestController::class, 'update']);
 Route::delete('/requests/{id}', [RequestController::class, 'destroy']);
+
+Route::post('/applications/{id}/reject', [ApplicationActionController::class, 'reject']);
+Route::post('/applications/{id}/invite', [ApplicationActionController::class, 'invite']);
+
+Route::get('/mail-test', function () {
+    Mail::raw('Test message', function ($m) {
+        $m->to('your@email.com')->subject('Test');
+    });
+
+    return 'sent';
+});

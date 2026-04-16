@@ -4,7 +4,7 @@
 
     <div class="content">
       <div class="header">
-        <h1 class="title">Мои заявки</h1>
+        <h1 class="title">Заявки</h1>
         <p class="desc">Выберите вакансию, чтобы посмотреть заявки</p>
       </div>
 
@@ -72,6 +72,11 @@
             <div class="date">
               {{ new Date(app.created_at).toLocaleDateString('ru-RU') }}
             </div>
+
+            <div class="actions">
+                <button class="reject" @click="reject(app.id)">Отказ</button>
+                <button class="invite" @click="invite(app.id)">Пригласить</button>
+            </div>
           </div>
 
           <div v-if="sortedApplications.length === 0" class="no-applications">
@@ -101,6 +106,22 @@ const selectedVacancyId = ref(null)
 
 const selectVacancy = (id) => {
   selectedVacancyId.value = id
+}
+
+const reject = async (id) => {
+  await fetch(`http://127.0.0.1:8000/api/applications/${id}/reject`, {
+    method: 'POST'
+  })
+
+  alert('Письмо об отказе отправлено')
+}
+
+const invite = async (id) => {
+  await fetch(`http://127.0.0.1:8000/api/applications/${id}/invite`, {
+    method: 'POST'
+  })
+
+  alert('Пользователь создан и приглашение отправлено')
 }
 
 /* -----------------------------
@@ -176,6 +197,39 @@ const getApplicationsCount = (vacancyId) => {
   padding: 40px 60px;
   height: 100%;
   overflow-y: auto;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.actions button {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.reject {
+  background: rgba(255, 80, 80, 0.2);
+  color: #ff6b6b;
+}
+
+.reject:hover {
+  background: rgba(255, 80, 80, 0.35);
+}
+
+.invite {
+  background: rgba(80, 255, 160, 0.15);
+  color: #4ef0a5;
+}
+
+.invite:hover {
+  background: rgba(80, 255, 160, 0.3);
 }
 
 .header {
