@@ -113,7 +113,7 @@ const selectVacancy = (id) => {
 }
 
 const reject = async (id) => {
-  await fetch(`http://127.0.0.1:8000/api/applications/${id}/reject`, {
+  await fetch(`http://loclahost:8000/api/applications/${id}/reject`, {
     method: 'POST'
   })
 
@@ -121,7 +121,8 @@ const reject = async (id) => {
 }
 
 const invite = async (id) => {
-  await fetch(`http://127.0.0.1:8000/api/applications/${id}/invite`, {
+  await fetch(`http://localhost:8000/api/applications/${id}/invite`, {
+    credentials: 'include',
     method: 'POST'
   })
 
@@ -132,8 +133,8 @@ const invite = async (id) => {
    ЗАГРУЗКА ДАННЫХ
 ------------------------------*/
 onMounted(async () => {
-  const vacRes = await fetch('http://127.0.0.1:8000/api/vacancies')
-  const appRes = await fetch('http://127.0.0.1:8000/api/requests')
+  const vacRes = await fetch('http://localhost:8000/api/vacancies',{credentials: 'include'})
+  const appRes = await fetch('http://localhost:8000/api/requests',{credentials: 'include'})
 
   const vacData = await vacRes.json()
   const appData = await appRes.json()

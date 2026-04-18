@@ -8,6 +8,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationActionController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,29 +18,37 @@ use App\Http\Controllers\MessageController;
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    // ===== ВАКАНСИИ =====
-    Route::apiResource('vacancies', VacancyController::class);
+    // ===== USER =====
+    Route::middleware(['web', 'auth'])->get('/user', [AuthController::class, 'user']);
 
-    // ===== КОЛЛЕДЖИ =====
-    Route::get('/colleges/universities', [CollegeController::class, 'getUniversities']);
-    Route::get('/colleges/colleges-only', [CollegeController::class, 'getCollegesOnly']);
-    Route::get('/colleges/search', [CollegeController::class, 'search']);
-    Route::apiResource('colleges', CollegeController::class);
+    // ===== VACANCIES =====
+    Route::middleware(['web', 'auth'])->apiResource('vacancies', VacancyController::class);
+
+    // ===== COLLEGES =====
+    Route::middleware(['web', 'auth'])->get('/colleges/universities', [CollegeController::class, 'getUniversities']);
+    Route::middleware(['web', 'auth'])->get('/colleges/colleges-only', [CollegeController::class, 'getCollegesOnly']);
+    Route::middleware(['web', 'auth'])->get('/colleges/search', [CollegeController::class, 'search']);
+    Route::middleware(['web', 'auth'])->apiResource('colleges', CollegeController::class);
 
     // ===== APPLICATIONS =====
-    Route::apiResource('applications', ApplicationController::class);
+    Route::middleware(['web', 'auth'])->apiResource('applications', ApplicationController::class);
 
     // ===== REQUESTS =====
-    Route::apiResource('requests', RequestController::class);
+    Route::middleware(['web', 'auth'])->apiResource('requests', RequestController::class);
 
     // ===== ACTIONS =====
-    Route::post('/applications/{id}/reject', [ApplicationActionController::class, 'reject']);
-    Route::post('/applications/{id}/invite', [ApplicationActionController::class, 'invite']);
+    Route::middleware(['web', 'auth'])->post('/applications/{id}/reject', [ApplicationActionController::class, 'reject']);
+    Route::middleware(['web', 'auth'])->post('/applications/{id}/invite', [ApplicationActionController::class, 'invite']);
 
     // ===== CHATS =====
-    Route::apiResource('chats', ChatController::class);
-    Route::get('/chats/{chatId}/messages', [MessageController::class, 'index']);
+    Route::middleware(['web', 'auth'])->get('/chats', [ChatController::class, 'index']);
+    Route::middleware(['web', 'auth'])->post('/chats', [ChatController::class, 'store']);
+    Route::middleware(['web', 'auth'])->get('/chats/{chat}', [ChatController::class, 'show']);
+    Route::middleware(['web', 'auth'])->delete('/chats/{chat}', [ChatController::class, 'destroy']);
 
     // ===== MESSAGES =====
-    Route::apiResource('messages', MessageController::class)->only(['store', 'show', 'destroy']);
+    Route::middleware(['web', 'auth'])->get('/chats/{chat}/messages', [MessageController::class, 'index']);
+    Route::middleware(['web', 'auth'])->post('/messages', [MessageController::class, 'store']);
+    Route::middleware(['web', 'auth'])->get('/messages/{message}', [MessageController::class, 'show']);
+    Route::middleware(['web', 'auth'])->delete('/messages/{message}', [MessageController::class, 'destroy']);
 });

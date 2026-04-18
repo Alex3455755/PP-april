@@ -1,4 +1,5 @@
 <template>
+  <AppMenu v-if="userRole !== 0" />
   <div class="wrapper">
     <img :src="bg" class="bg" />
 
@@ -15,8 +16,7 @@
           :class="{ active: chat.id === activeChatId }"
           @click="openChat(chat)"
         >
-          <p>Диалог #{{ chat.id }}</p>
-          <small>{{ chat.token }}</small>
+          <p>{{ getChatName(chat) }}</p>
         </div>
       </div>
 
@@ -31,6 +31,10 @@
             class="message"
             :class="{ mine: msg.user_id === myId }"
           >
+            <small class="author">
+              {{ msg.user?.login || 'User #' + msg.user_id }}
+            </small>
+
             <p v-if="msg.text">{{ msg.text }}</p>
 
             <a v-if="msg.filePath" :href="msg.filePath" target="_blank">
@@ -64,6 +68,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import AppMenu from './items/AppMenu.vue'
+
+const API = 'http://localhost:8000'
 
 const bg = ref('img/fon.png')
 
@@ -76,16 +83,47 @@ const activeChatId = ref(null)
 const text = ref('')
 const file = ref(null)
 
-const myId = 1 // замени на auth user id
+const myId = ref(null)
+
+const userRole = ref(null)
+
+/* ---------------- USER ---------------- */
+const fetchUser = async () => {
+  const res = await fetch(`${API}/api/user`, {
+    credentials: 'include'
+  })
+
+  if (!res.ok) return
+
+  const data = await res.json()
+
+  myId.value = data.data.id
+  userRole.value = data.data.role   // 👈 ВОТ ЭТО ДОБАВЬ
+
+  console.log(data);
+}
+
+/* ---------------- CHAT NAME ---------------- */
+const getChatName = (chat) => {
+  if (!myId.value) return '...'
+
+  if (chat.author_id === myId.value) {
+    return chat.interlocutor?.login || 'Пользователь'
+  } else {
+    return chat.author?.login || 'Пользователь'
+  }
+}
 
 /* ---------------- CHAT LIST ---------------- */
 const fetchChats = async () => {
-  const res = await fetch('http://127.0.0.1:8000/api/chats')
-const data = await res.json()
+  const res = await fetch(`${API}/api/chats`, {
+    credentials: 'include'
+  })
 
-console.log('DATA:', data)
+  if (!res.ok) return
 
-chats.value = data
+  const data = await res.json()
+  chats.value = data
 }
 
 /* ---------------- OPEN CHAT ---------------- */
@@ -97,9 +135,17 @@ const openChat = async (chat) => {
 
 /* ---------------- MESSAGES ---------------- */
 const fetchMessages = async (chatId) => {
-  const res = await fetch(`http://127.0.0.1:8000/api/chats/${chatId}/messages`)
-  messages.value = await res.json()
-  console.log(messages.value)
+  const res = await fetch(`${API}/api/chats/${chatId}/messages`, {
+    credentials: 'include'
+  })
+
+  if (!res.ok) {
+    console.log('Ошибка загрузки сообщений')
+    return
+  }
+
+  const data = await res.json()
+  messages.value = data
 }
 
 /* ---------------- SEND MESSAGE ---------------- */
@@ -113,16 +159,19 @@ const sendMessage = async () => {
   const formData = new FormData()
   formData.append('text', text.value || '')
   formData.append('chat_id', activeChat.value.id)
-  formData.append('user_id', myId)
 
   if (file.value) {
     formData.append('file', file.value)
   }
 
-  await fetch('http://127.0.0.1:8000/api/messages', {
-    method: 'POST',
-    body: formData
-  })
+  await fetch(`${API}/api/messages`, {
+  method: 'POST',
+  credentials: 'include',
+  headers: {
+    'Accept': 'application/json'
+  },
+  body: formData
+})
 
   text.value = ''
   file.value = null
@@ -131,8 +180,9 @@ const sendMessage = async () => {
 }
 
 /* ---------------- INIT ---------------- */
-onMounted(() => {
-  fetchChats()
+onMounted(async () => {
+  await fetchUser()
+  await fetchChats()
 })
 
 /* ---------------- FORMAT ---------------- */
@@ -162,7 +212,6 @@ const formatDate = (d) => {
   z-index: -1;
 }
 
-/* layout */
 .layout {
   display: flex;
   height: 100%;
@@ -220,16 +269,29 @@ const formatDate = (d) => {
   margin-bottom: 10px;
   border-radius: 14px;
   background: rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
 }
 
 .message.mine {
   margin-left: auto;
-  background: rgba(255, 159, 77, 0.25);
+  background: linear-gradient(135deg, #ff9f4d, #ff7a00);
+}
+
+.author {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.message.mine .author {
+  text-align: right;
 }
 
 .time {
   font-size: 11px;
   opacity: 0.6;
+  margin-top: 5px;
 }
 
 /* input */
@@ -255,5 +317,11 @@ button {
   background: rgba(255, 159, 77, 0.2);
   color: white;
   cursor: pointer;
+}
+
+.empty {
+  margin: auto;
+  font-size: 18px;
+  opacity: 0.7;
 }
 </style>

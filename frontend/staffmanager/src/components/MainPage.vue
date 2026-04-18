@@ -134,12 +134,14 @@ const form = ref({
   vacancie_id: ''
 })
 
-const API_URL = 'http://127.0.0.1:8000/api'
+const API_URL = 'http://localhost:8000/api'
 
 // Загрузка списка колледжей
 const fetchColleges = async () => {
   try {
-    const response = await fetch(`${API_URL}/colleges`)
+    const response = await fetch(`${API_URL}/colleges`,{
+      credentials: 'include'
+    })
     const result = await response.json()
     if (result.success) {
       colleges.value = result.data
@@ -152,7 +154,9 @@ const fetchColleges = async () => {
 // Загрузка списка вакансий
 const fetchVacancies = async () => {
   try {
-    const response = await fetch(`${API_URL}/vacancies`)
+    const response = await fetch(`${API_URL}/vacancies`,{
+      credentials: 'include'
+    })
     const result = await response.json()
     if (result.success) {
       vacancies.value = result.data
@@ -194,6 +198,7 @@ const submitForm = async () => {
     }
     
     const response = await fetch(`${API_URL}/requests`, {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -6,26 +6,29 @@ use App\Models\Message;
 use App\Models\Chat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
     // сообщения чата
     public function index($chatId)
-    {
-        $messages = Message::where('chat_id', $chatId)
-            ->orderBy('created_at', 'asc')
-            ->get();
+{
 
-        return response()->json($messages);
-    }
+    
+    return Message::with('user')
+        ->where('chat_id', $chatId)
+        ->orderBy('created_at')
+        ->get();
+}
 
     // отправка сообщения
     public function store(Request $request)
     {
+
+        $userId = Auth::id();
         $data = $request->validate([
             'chat_id' => 'required|exists:chats,id',
             'text' => 'nullable|string',
-            'user_id' => 'required|integer',
             'file' => 'nullable|file|max:10240',
         ]);
 
@@ -39,7 +42,7 @@ class MessageController extends Controller
             'chat_id' => $data['chat_id'],
             'text' => $data['text'],
             'filePath' => $filePath,
-            'user_id' => 5,
+            'user_id' => $userId,
         ]);
 
         // обновляем чат (чтобы сортировка работала)

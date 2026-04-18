@@ -14,4 +14,14 @@ class Chat extends Model
     'author_id',
     'interlocutor_id'
 ];
+
+public function author()
+{
+    return $this->belongsTo(User::class, 'author_id');
+}
+
+public function interlocutor()
+{
+    return $this->belongsTo(User::class, 'interlocutor_id');
+}
 }

@@ -86,14 +86,16 @@ const vacancies = ref([])
 const loading = ref(false)
 const error = ref(null)
 
-const API_URL = 'http://127.0.0.1:8000/api'
+const API_URL = 'http://localhost:8000/api'
 
 const fetchVacancies = async () => {
   loading.value = true
   error.value = null
   
   try {
-    const response = await fetch(`${API_URL}/vacancies`)
+    const response = await fetch(`${API_URL}/vacancies`,{
+      credentials: 'include'
+    })
     
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}`)

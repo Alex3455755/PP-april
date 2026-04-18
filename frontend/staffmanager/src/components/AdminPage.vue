@@ -226,7 +226,9 @@ const editForm = ref({
 /* ------------------ ЗАГРУЗКА ------------------ */
 const fetchVacancies = async () => {
   try {
-    const res = await fetch('http://localhost:8000/api/vacancies')
+    const res = await fetch('http://localhost:8000/api/vacancies',{
+      credentials: 'include'
+    })
     vacancies.value = (await res.json()).data
 
     console.log(vacancies.value);
@@ -245,6 +247,7 @@ const editVacancy = (vacancy) => {
 const updateVacancy = async () => {
   try {
     const res = await fetch(`http://localhost:8000/api/vacancies/${editForm.value.id}`, {
+      credentials: 'include',
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -272,6 +275,7 @@ const deleteVacancy = async (id) => {
 
   try {
     const res = await fetch(`http://localhost:8000/api/vacancies/${id}`, {
+      credentials: 'include',
       method: 'DELETE',
       headers: {
         'Accept': 'application/json'

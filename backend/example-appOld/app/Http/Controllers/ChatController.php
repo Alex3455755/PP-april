@@ -8,18 +8,28 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
-    // список чатов пользователя
-    public function index()
-    {
-        $userId = request()->user()->id;
-        
-        $chats = Chat::where('author_id', $userId)
-            ->orWhere('interlocutor_id', $userId)
-            ->orderBy('updated_at', 'desc')
-            ->get();
 
-        return response()->json($chats);
+
+
+    public function index()
+{
+    $userId = Auth::id();
+    $user = request()->user();
+
+    if (!$user) {
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
+
+   $chats = Chat::with(['author', 'interlocutor'])
+    ->where(function ($q) use ($userId) {
+        $q->where('author_id', $userId)
+          ->orWhere('interlocutor_id', $userId);
+    })
+    ->orderBy('updated_at', 'desc')
+    ->get();
+    return response()->json($chats);
+}
+    // список чатов пользовател
 
     // создать чат
     public function store(Request $request)

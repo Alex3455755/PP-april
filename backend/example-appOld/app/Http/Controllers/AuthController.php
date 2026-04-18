@@ -139,8 +139,9 @@ class AuthController extends Controller
                 'success' => true,
                 'data' => [
                     'id' => $user->id,
-                    'name' => $user->name,
+                    'login' => $user->login,
                     'email' => $user->email,
+                    'role'  =>$user->role,
                     'created_at' => $user->created_at
                 ]
             ]);

@@ -23,10 +23,19 @@
 </template>
 
 <script setup>
+/* global defineProps */
+
 const logout = () => {
   localStorage.removeItem('token')
   location.href = '/login'
 }
+
+defineProps({
+  userRole: {
+    type: Number,
+    default: null
+  }
+})
 </script>
 
 <style scoped>
