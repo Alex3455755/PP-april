@@ -77,55 +77,52 @@ const togglePassword = () => {
   showPassword.value = !showPassword.value
 }
 
-const submitLogin = async () => {
-  if (!form.value.email || !form.value.password) {
-    alert('Пожалуйста, заполните все поля')
-    return
-  }
+const getCookie = (name) => {
+  const match = document.cookie.match(
+    new RegExp('(^| )' + name + '=([^;]+)')
+  )
+  return match ? decodeURIComponent(match[2]) : null
+}
 
+const submitLogin = async () => {
   loading.value = true
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      // credentials: 'include',   ← закомментируй или удали
-      body: JSON.stringify({
-        email: form.value.email,
-        password: form.value.password
+    // 1. Получаем CSRF cookie
+    await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+        credentials: 'include'
       })
-    })
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.message || 'Ошибка сервера')
-    }
+    const xsrfToken = getCookie('XSRF-TOKEN')
+
+const response = await fetch('http://localhost:8000/login', {
+  method: 'POST',
+  credentials: 'include',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-XSRF-TOKEN': xsrfToken // 🔥 ВОТ ЭТО КЛЮЧ
+  },
+  body: JSON.stringify({
+    email: form.value.email,
+    password: form.value.password
+  })
+})
 
     const result = await response.json()
 
     if (result.success) {
-      localStorage.setItem('user_name', result.data.user.name)
-      localStorage.setItem('user_email', result.data.user.email)
-      localStorage.setItem('is_authenticated', 'true')
+      alert('Добро пожаловать!')
 
-      alert(`Добро пожаловать!`);
-
-      console.log(result.data.user.role);
-      if(result.data.user.role === 1){
-        router.push('/admin');
-      }else{
-        router.push('/chats');
+      if (result.user.role === 1) {
+        router.push('/admin')
+      } else {
+        router.push('/chats')
       }
-    } else {
-      alert('Ошибка входа: ' + (result.message || 'Неверный email или пароль'))
     }
-  } catch (error) {
-    console.error('Ошибка:', error)
-    alert('Не удалось войти: ' + error.message)
+
+  } catch (e) {
+    alert('Ошибка входа')
   } finally {
     loading.value = false
   }

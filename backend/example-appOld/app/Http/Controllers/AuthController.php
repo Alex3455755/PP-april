@@ -75,22 +75,15 @@ class AuthController extends Controller
     $credentials = $request->only('email', 'password');
     $remember    = $request->has('remember') || false;
 
-    if (Auth::attempt($credentials, $remember)) {
-        $user = Auth::user();   // ← Вот здесь получаем пользователя
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Вход выполнен успешно',
-            'data'    => [
-                'user' => [
-                    'id'    => $user->id,
-                    'name'  => $user->name,
-                    'email' => $user->email,
-                    'role' => $user->role,
-                ]
-            ]
-        ]);
-    }
+    if (Auth::attempt($credentials)) {
+    $request->session()->regenerate();
+
+    return response()->json([
+        'success' => true,
+        'user' => Auth::user(),
+        'role' => Auth::user()->role,
+    ]);
+}
 
     // Если не удалось войти
     return response()->json([

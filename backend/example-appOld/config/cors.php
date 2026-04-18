@@ -1,12 +1,21 @@
 <?php
 
 return [
-    'paths' => ['*'],
+
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout', 'register'],
+
     'allowed_methods' => ['*'],
-    'allowed_origins' => ['*'],
+
+    'allowed_origins' => ['http://localhost:8080'],
+
     'allowed_origins_patterns' => [],
+
     'allowed_headers' => ['*'],
+
     'exposed_headers' => [],
-    'max_age' => 7200,
-    'supports_credentials' => false, // Важно: true для credentials
+
+    'max_age' => 0,
+
+    'supports_credentials' => true,
+
 ];

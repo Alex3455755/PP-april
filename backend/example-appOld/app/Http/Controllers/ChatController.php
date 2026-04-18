@@ -11,9 +11,8 @@ class ChatController extends Controller
     // список чатов пользователя
     public function index()
     {
-        // $userId = Auth::id();
-        $userId = 6;
-
+        $userId = request()->user()->id;
+        
         $chats = Chat::where('author_id', $userId)
             ->orWhere('interlocutor_id', $userId)
             ->orderBy('updated_at', 'desc')
