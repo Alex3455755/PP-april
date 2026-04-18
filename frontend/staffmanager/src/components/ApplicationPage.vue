@@ -113,7 +113,8 @@ const selectVacancy = (id) => {
 }
 
 const reject = async (id) => {
-  await fetch(`http://loclahost:8000/api/applications/${id}/reject`, {
+  await fetch(`http://localhost:8000/api/applications/${id}/reject`, {
+    credentials: 'include',
     method: 'POST'
   })
 

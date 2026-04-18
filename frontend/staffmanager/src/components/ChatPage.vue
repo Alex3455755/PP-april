@@ -37,9 +37,9 @@
 
             <p v-if="msg.text">{{ msg.text }}</p>
 
-            <a v-if="msg.filePath" :href="msg.filePath" target="_blank">
+            <!-- <a v-if="msg.filePath" :href="msg.filePath" target="_blank">
               📎 файл
-            </a>
+            </a> -->
 
             <span class="time">
               {{ formatDate(msg.created_at) }}
@@ -51,7 +51,7 @@
         <div class="input-box">
           <input v-model="text" placeholder="Сообщение..." />
 
-          <input type="file" @change="handleFile" />
+          <!-- <input type="file" @change="handleFile" /> -->
 
           <button @click="sendMessage">Отправить</button>
         </div>
@@ -149,9 +149,9 @@ const fetchMessages = async (chatId) => {
 }
 
 /* ---------------- SEND MESSAGE ---------------- */
-const handleFile = (e) => {
-  file.value = e.target.files[0]
-}
+// const handleFile = (e) => {
+//   file.value = e.target.files[0]
+// }
 
 const sendMessage = async () => {
   if (!activeChat.value) return

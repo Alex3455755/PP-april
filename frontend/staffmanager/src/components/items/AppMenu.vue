@@ -16,7 +16,7 @@
     </nav>
 
     <div class="right">
-      <button class="logout-btn" @click="logout">🚪 Выход</button>
+      <button class="logout-btn" @click="logout">Выход</button>
     </div>
 
   </header>
