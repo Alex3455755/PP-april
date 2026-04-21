@@ -2,64 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 🔥 Получить текущего пользователя
      */
-    public function index()
+    public function show()
     {
-        //
+        return response()->json([
+            'success' => true,
+            'data' => Auth::user()
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 🔥 Обновить профиль пользователя
      */
-    public function create()
+    public function update(Request $request)
     {
-        //
-    }
+        $user = Auth::user();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $validated = $request->validate([
+            'login' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'password' => 'nullable|min:6',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
+        $user->login = $validated['login'];
+        $user->email = $validated['email'];
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
+        // если пароль введён — обновляем
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
+        $user->save();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'data' => $user
+        ]);
     }
 }

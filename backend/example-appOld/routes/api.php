@@ -9,6 +9,7 @@ use App\Http\Controllers\ApplicationActionController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,8 +27,12 @@ Route::get('/colleges/search', [CollegeController::class, 'search']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
+
     // ===== USER =====
     Route::middleware(['web', 'auth'])->get('/user', [AuthController::class, 'user']);
+
+    Route::middleware(['web', 'auth'])->get('/profile', [UserController::class, 'show']);
+    Route::middleware(['web', 'auth'])->put('/profile', [UserController::class, 'update']);
 
     // ===== VACANCIES =====
 
