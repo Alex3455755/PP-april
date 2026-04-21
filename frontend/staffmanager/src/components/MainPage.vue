@@ -1,5 +1,7 @@
 <template>
   <div class="wrapper">
+
+    <AppMenu />
     <img
       :src="backgroundImage"
       alt="Background"
@@ -8,7 +10,6 @@
 
     <div class="glass-form">
       <div class="title-block">
-        <p class="subtitle">3D GLASSMORPHISM</p>
         <h1 class="title">НОВОМЕТ</h1>
         <p class="desc">Отправьте заявку на интересующую вас вакансию</p>
       </div>
@@ -103,19 +104,18 @@
       </div>
       
       <div class="vacancies-link">
-        <router-link to="/vacancies" class="vacancies-btn">
+        <router-link to="/" class="vacancies-btn">
           Смотреть все вакансии
         </router-link>
       </div>
     </div>
-
-    <div class="corner">⟳</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import AppMenu from './items/AppMenu.vue'
 
 const route = useRoute()
 

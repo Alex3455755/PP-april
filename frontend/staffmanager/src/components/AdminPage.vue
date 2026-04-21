@@ -1,8 +1,7 @@
 <template>
+<AppMenu />
 
-  <AppMenu />
   <div class="wrapper">
-
     <!-- Фон -->
     <img :src="backgroundImage" class="bg-image" />
 

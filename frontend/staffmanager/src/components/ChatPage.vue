@@ -1,5 +1,5 @@
 <template>
-  <AppMenu v-if="userRole !== 0" />
+  <AppMenu />
   <div class="wrapper">
     <img :src="bg" class="bg" />
 

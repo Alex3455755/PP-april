@@ -16,22 +16,25 @@ use App\Http\Controllers\AuthController;
 |--------------------------------------------------------------------------
 */
 
+Route::apiResource('vacancies', VacancyController::class);
+Route::apiResource('applications', ApplicationController::class);
+
+Route::get('/colleges/colleges-only', [CollegeController::class, 'getCollegesOnly']);
+Route::get('/colleges/universities', [CollegeController::class, 'getUniversities']);
+Route::apiResource('colleges', CollegeController::class);
+Route::get('/colleges/search', [CollegeController::class, 'search']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // ===== USER =====
     Route::middleware(['web', 'auth'])->get('/user', [AuthController::class, 'user']);
 
     // ===== VACANCIES =====
-    Route::middleware(['web', 'auth'])->apiResource('vacancies', VacancyController::class);
 
     // ===== COLLEGES =====
-    Route::middleware(['web', 'auth'])->get('/colleges/universities', [CollegeController::class, 'getUniversities']);
-    Route::middleware(['web', 'auth'])->get('/colleges/colleges-only', [CollegeController::class, 'getCollegesOnly']);
-    Route::middleware(['web', 'auth'])->get('/colleges/search', [CollegeController::class, 'search']);
-    Route::middleware(['web', 'auth'])->apiResource('colleges', CollegeController::class);
+
 
     // ===== APPLICATIONS =====
-    Route::middleware(['web', 'auth'])->apiResource('applications', ApplicationController::class);
 
     // ===== REQUESTS =====
     Route::middleware(['web', 'auth'])->apiResource('requests', RequestController::class);

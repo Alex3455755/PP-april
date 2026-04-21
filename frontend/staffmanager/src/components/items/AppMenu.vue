@@ -1,6 +1,7 @@
 <template>
   <header class="topbar">
 
+    <!-- LOGO -->
     <div class="logo">
       <div class="logo-icon">N</div>
       <div class="logo-text">
@@ -9,38 +10,113 @@
       </div>
     </div>
 
-    <nav class="nav">
-      <router-link to="/admin" class="nav-item">Вакансии</router-link>
-      <router-link to="/application" class="nav-item">Заявки</router-link>
-      <router-link to="/chats" class="nav-item">Чаты</router-link>
+    <!-- NAV -->
+    <nav v-if="isLoaded" class="nav">
+      <div 
+        v-for="item in navItems" 
+        :key="item.id"
+        class="nav-item"
+        :class="{ 'router-link-active': isActive(item.path) }"
+        @click="navigate(item.path)"
+      >
+        {{ item.name }}
+      </div>
     </nav>
 
+    <!-- RIGHT -->
     <div class="right">
-      <button class="logout-btn" @click="logout">Выход</button>
+      <button v-if="user" class="logout-btn" @click="logout">
+        Выход
+      </button>
     </div>
 
   </header>
 </template>
 
 <script setup>
-/* global defineProps */
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const logout = () => {
-  localStorage.removeItem('token')
-  location.href = '/login'
+const route = useRoute()
+const router = useRouter()
+
+const user = ref(null)
+const isLoaded = ref(false)
+
+// 🔥 запрос пользователя
+const fetchUser = async () => {
+  try {
+
+    const res = await fetch('http://localhost:8000/api/user', {
+      credentials: 'include',
+    })
+
+    if (!res.ok) throw new Error('Unauthorized')
+    
+    const data = await res.json()
+    user.value = data
+
+  } catch (e) {
+    user.value = null
+  } finally {
+    isLoaded.value = true
+  }
 }
 
-defineProps({
-  userRole: {
-    type: Number,
-    default: null
+// 🔥 динамическое меню
+const navItems = computed(() => {
+
+  const u = user.value
+
+  if (!u) {
+    return [
+      { id: 1, name: 'Вакансии', path: '/' },
+      { id: 2, name: 'Вход', path: '/login' },
+    ]
   }
+
+  if (Number(u.data.role) === 1) {
+    return [
+      { id: 1, name: 'Вакансии', path: '/' },
+      { id: 2, name: 'Админка', path: '/admin' },
+      { id: 3, name: 'Чаты', path: '/chats' },
+      { id: 4, name: 'Заявки', path: '/applications' },
+      { id: 5, name: 'Профиль', path: '/profile' },
+    ]
+  }
+
+  return [
+    { id: 1, name: 'Вакансии', path: '/' },
+    { id: 2, name: 'Профиль', path: '/profile' },
+    { id: 3, name: 'Чаты', path: '/chats' },
+  ]
+})
+
+// активный пункт
+const isActive = (path) => route.path === path
+
+// переход
+const navigate = (path) => {
+  if (route.path !== path) {
+    router.push(path)
+  }
+}
+
+// выход
+const logout = () => {
+  localStorage.removeItem('token')
+  user.value = null
+  router.push('/login')
+}
+
+onMounted(() => {
+  fetchUser()
 })
 </script>
 
 <style scoped>
 .topbar {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   position: fixed;
   top: 0;
   left: 0;
@@ -106,13 +182,13 @@ defineProps({
   padding: 10px 14px;
   border-radius: 14px;
 
-  text-decoration: none;
   color: rgba(255,255,255,0.85);
 
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
 
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .nav-item:hover {

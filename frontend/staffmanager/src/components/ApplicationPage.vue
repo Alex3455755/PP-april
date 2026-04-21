@@ -91,8 +91,6 @@
         Выберите вакансию
       </div>
     </div>
-
-    <div class="corner">⟳</div>
   </div>
 </template>
 

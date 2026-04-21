@@ -87,7 +87,6 @@
         </router-link>
       </div>
     </div>
-    <div class="corner">⟳</div>
   </div>
 </template>
 

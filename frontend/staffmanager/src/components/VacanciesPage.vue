@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <AppMenu />
     <img
       :src="backgroundImage"
       alt="Background"
@@ -14,12 +15,6 @@
         <p class="desc">Актуальные предложения для вас</p>
       </div>
 
-      <!-- Кнопка назад -->
-      <div class="back-button">
-        <button @click="goBack" class="back-btn">
-          ← Назад к форме
-        </button>
-      </div>
 
       <!-- Список вакансий -->
       <div v-if="loading" class="loading">
@@ -71,8 +66,6 @@
         </div>
       </div>
     </div>
-
-    <div class="corner">⟳</div>
   </div>
 </template>
 
@@ -119,7 +112,7 @@ const fetchVacancies = async () => {
 const applyForVacancy = (vacancy) => {
   // Переход на главную страницу с заполнением данных вакансии
   router.push({
-    path: '/',
+    path: '/form',
     query: {
       position: vacancy.title,
       vacancy_id: vacancy.id
