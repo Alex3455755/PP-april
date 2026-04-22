@@ -70,6 +70,7 @@
 </template>
 
 <script setup>
+import AppMenu from './items/AppMenu.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 

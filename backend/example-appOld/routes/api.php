@@ -25,6 +25,12 @@ Route::get('/colleges/universities', [CollegeController::class, 'getUniversities
 Route::apiResource('colleges', CollegeController::class);
 Route::get('/colleges/search', [CollegeController::class, 'search']);
 
+Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::apiResource('requests', RequestController::class);
+
+    
+
 Route::middleware('auth:sanctum')->group(function () {
 
 
@@ -42,8 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // ===== APPLICATIONS =====
 
     // ===== REQUESTS =====
-    Route::middleware(['web', 'auth'])->apiResource('requests', RequestController::class);
-
     // ===== ACTIONS =====
     Route::middleware(['web', 'auth'])->post('/applications/{id}/reject', [ApplicationActionController::class, 'reject']);
     Route::middleware(['web', 'auth'])->post('/applications/{id}/invite', [ApplicationActionController::class, 'invite']);
@@ -59,4 +63,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['web', 'auth'])->post('/messages', [MessageController::class, 'store']);
     Route::middleware(['web', 'auth'])->get('/messages/{message}', [MessageController::class, 'show']);
     Route::middleware(['web', 'auth'])->delete('/messages/{message}', [MessageController::class, 'destroy']);
+    
 });

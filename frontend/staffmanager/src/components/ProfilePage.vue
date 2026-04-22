@@ -1,6 +1,7 @@
 <template>
-  <div class="profile-page">
 
+  <div class="profile-page">
+    <AppMenu />
     <div class="card">
       <h2>Профиль</h2>
 
@@ -41,6 +42,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import AppMenu from './items/AppMenu.vue'
 
 const loading = ref(true)
 

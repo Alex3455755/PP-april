@@ -4,18 +4,15 @@
     <!-- 🔥 ГЛОБАЛЬНЫЙ ФОН -->
     <img src="/img/fon.png" class="bg-image" />
 
-    <AppMenu />
+    
     <router-view />
 
   </div>
 </template>
 
 <script>
-import AppMenu from './components/items/AppMenu.vue'
 
-export default {
-  components: { AppMenu }
-}
+
 </script>
 
 <style>

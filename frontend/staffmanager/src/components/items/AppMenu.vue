@@ -80,7 +80,7 @@ const navItems = computed(() => {
       { id: 1, name: 'Вакансии', path: '/' },
       { id: 2, name: 'Админка', path: '/admin' },
       { id: 3, name: 'Чаты', path: '/chats' },
-      { id: 4, name: 'Заявки', path: '/applications' },
+      { id: 4, name: 'Заявки', path: '/application' },
       { id: 5, name: 'Профиль', path: '/profile' },
     ]
   }
@@ -103,11 +103,49 @@ const navigate = (path) => {
 }
 
 // выход
-const logout = () => {
-  localStorage.removeItem('token')
-  user.value = null
-  router.push('/login')
-}
+const logout = async () => {
+  try {
+    // Получаем CSRF cookie (для Sanctum SPA)
+    await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+      credentials: 'include',
+    });
+    
+    // Извлекаем XSRF токен из cookies
+    const xsrfToken = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('XSRF-TOKEN'))
+      ?.split('=')[1];
+    
+    const res = await fetch('http://localhost:8000/logout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'X-XSRF-TOKEN': decodeURIComponent(xsrfToken || ''),
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Logout failed: ${res.status}`);
+    }
+
+    // Очищаем локальное состояние
+    localStorage.removeItem('token');
+    user.value = null;
+    
+    // Редирект на login
+    router.push('/login');
+
+  } catch (error) {
+    console.error('Ошибка при выходе:', error);
+    
+    // Принудительная очистка даже при ошибке
+    localStorage.removeItem('token');
+    user.value = null;
+    router.push('/login');
+  }
+};
 
 onMounted(() => {
   fetchUser()

@@ -110,7 +110,6 @@ const response = await fetch('http://localhost:8000/login', {
     const result = await response.json()
 
     if (result.success) {
-      alert('Добро пожаловать!')
 
       if (result.user.role === 1) {
         router.push('/admin')
